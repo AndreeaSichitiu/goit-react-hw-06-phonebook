@@ -8,12 +8,13 @@ import { useSelector } from 'react-redux';
 import { getFilter, getContacts } from 'redux/selectors';
 
 export default function ContactList() {
-   const contacts = useSelector(getContacts);
-   const filter = useSelector(getFilter);
- 
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+
   const filteredContacts = contacts.filter(contact =>
-   contact.name.toLowerCase().trim().includes(filter.toLowerCase()))
-  
+    contact.name.toLowerCase().trim().includes(filter.toLowerCase())
+  );
+
   if (filter.toLowerCase() && !filteredContacts.length) {
     Notify.warning('No contacts matching your request', {
       position: 'center-center',
