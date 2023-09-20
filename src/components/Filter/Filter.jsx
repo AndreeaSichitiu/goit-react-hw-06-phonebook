@@ -2,7 +2,20 @@ import React from 'react';
 import style from "./Filter.module.css"
 import PropTypes from 'prop-types';
 
-export default function Filter({ filter, onChange }) {
+import { filterContacts } from 'redux/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilter } from 'redux/selectors';
+
+
+export default function Filter() {
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+
+  const handleFilterChange = event => {
+    dispatch(filterContacts(event.target.value));
+  };
+
   return (
     <div className={style.filterWrapper}>
       <label className={style.filterLabel}>Find contacts by name</label>
@@ -12,7 +25,7 @@ export default function Filter({ filter, onChange }) {
         name="filter"
         placeholder="Enter contact to search"
         value={filter}
-        onChange={event => onChange(event.target.value)}
+        onChange={handleFilterChange}
       ></input>
     </div>
   );

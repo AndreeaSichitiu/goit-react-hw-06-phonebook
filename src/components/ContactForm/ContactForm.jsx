@@ -1,16 +1,41 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import style from './ContactForm.module.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-export function ContactForm({ onAddContact }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { addContacts } from 'redux/contactBookSlice';
+import { getContacts } from 'redux/selectors';
+
+export function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const handleSubmit = event => {
     event.preventDefault();
-    onAddContact(name, number);
+
+    const contactExists = contacts
+      .map(contact => contact.name.toLowerCase())
+      .includes(name.toLowerCase());
+
+    if (contactExists) {
+      Notify.warning(`${name} is already in contacts`, {
+        position: 'center-center',
+      });
+      setName('');
+      setNumber('');
+      return;
+    }
+    dispatch(addContacts(name, number));
     setName('');
     setNumber('');
+
+    Notify.success(`${name} was successfully added to your contacts`, {
+      position: 'center-center',
+    });
   };
 
   return (
